@@ -1,3 +1,4 @@
+import os
 import logging
 from pathlib import Path
 from sqlalchemy import create_engine, event
@@ -10,6 +11,10 @@ class Base(DeclarativeBase):
     pass
 
 def resolve_db_url(url: str) -> str:
+    # If on Vercel serverless environment, local filesystem is read-only except /tmp
+    if os.environ.get("VERCEL") and url.startswith("sqlite"):
+        return "sqlite:////tmp/sunil_classes.db"
+
     # If SQLite URL has a relative path (e.g. sqlite:///./sunil_classes.db),
     # resolve it relative to the backend directory so that running from any folder
     # always opens the same database file.

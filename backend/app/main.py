@@ -37,6 +37,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+def startup_populate():
+    try:
+        from app.seed_catalogue import seed
+        seed()
+    except Exception as e:
+        import logging
+        logging.getLogger("sunil_classes").warning(f"Auto-seed notification: {e}")
+
+
 def user_out(u: User):
     return {
         "id": u.id,
