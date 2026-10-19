@@ -11,6 +11,12 @@ class Base(DeclarativeBase):
     pass
 
 def resolve_db_url(url: str) -> str:
+    # Convert Render / Heroku postgres:// or plain postgresql:// to postgresql+psycopg://
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql+psycopg://", 1)
+    elif url.startswith("postgresql://") and "+psycopg" not in url:
+        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
+
     # If on Vercel serverless environment, local filesystem is read-only except /tmp
     if os.environ.get("VERCEL") and url.startswith("sqlite"):
         return "sqlite:////tmp/sunil_classes.db"
