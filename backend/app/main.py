@@ -27,11 +27,12 @@ app = FastAPI(
     description="Comprehensive API for Sunil Sir Classes coaching management application."
 )
 
-# Robust CORS middleware configuration
+# Robust CORS middleware configuration (allow all origins, including any Vercel preview or production domain)
 origins = [x.strip() for x in settings.frontend_origins.split(",") if x.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins if origins else ["*"],
+    allow_origin_regex=r".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
