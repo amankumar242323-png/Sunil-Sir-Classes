@@ -68,6 +68,16 @@ def subject_out(s: Subject):
 
 # --- SYSTEM & HEALTH ---
 
+@app.get("/", tags=["System"])
+def root():
+    return {
+        "app": settings.app_name,
+        "status": "online",
+        "docs": "/docs",
+        "health": "/health",
+        "version": "1.1.0"
+    }
+
 @app.get("/health", tags=["System"])
 def health():
     return {
